@@ -2,6 +2,7 @@ package br.com.fiap.inclusao_diversidade.controller;
 
 import br.com.fiap.inclusao_diversidade.model.Treinamento;
 import br.com.fiap.inclusao_diversidade.service.TreinamentoService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,12 +31,12 @@ public class TreinamentoController {
     }
 
     @PostMapping
-    public ResponseEntity<Treinamento> criar(@RequestBody Treinamento treinamento) {
+    public ResponseEntity<Treinamento> criar(@Valid @RequestBody Treinamento treinamento) {
         return ResponseEntity.ok(treinamentoService.salvar(treinamento));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Treinamento> atualizar(@PathVariable Long id, @RequestBody Treinamento treinamento) {
+    public ResponseEntity<Treinamento> atualizar(@PathVariable Long id,@Valid @RequestBody Treinamento treinamento) {
         return treinamentoService.buscarPorId(id)
                 .map(t -> {
                     treinamento.setId(id);
