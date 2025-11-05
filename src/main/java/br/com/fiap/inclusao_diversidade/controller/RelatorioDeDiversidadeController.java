@@ -1,10 +1,14 @@
 package br.com.fiap.inclusao_diversidade.controller;
 
-import br.com.fiap.inclusao_diversidade.model.RelatorioDeDiversidade;
+import br.com.fiap.inclusao_diversidade.dto.RelatorioDeDiversidadeRequestDTO;
+import br.com.fiap.inclusao_diversidade.dto.RelatorioDeDiversidadeResponseDTO;
 import br.com.fiap.inclusao_diversidade.service.RelatorioDeDiversidadeService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -18,29 +22,29 @@ public class RelatorioDeDiversidadeController {
     }
 
     @GetMapping
-    public ResponseEntity<List<RelatorioDeDiversidade>> listarTodos() {
+    public ResponseEntity<List<RelatorioDeDiversidadeResponseDTO>> listarTodos() {
         return ResponseEntity.ok(relatorioService.listarTodos());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<RelatorioDeDiversidade> buscarPorId(@PathVariable Long id) {
+    public ResponseEntity<RelatorioDeDiversidadeResponseDTO> buscarPorId(@PathVariable Long id) {
         return relatorioService.buscarPorId(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public ResponseEntity<RelatorioDeDiversidade> criar(@RequestBody RelatorioDeDiversidade relatorio) {
-        return ResponseEntity.ok(relatorioService.salvar(relatorio));
+    public ResponseEntity<RelatorioDeDiversidadeResponseDTO> criar(@Valid @RequestBody RelatorioDeDiversidadeRequestDTO dto) {
+        RelatorioDeDiversidadeResponseDTO salvo = relatorioService.salvar(dto);
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+                .buildAndExpand(salvo.id()).toUri();
+        return ResponseEntity.created(location).body(salvo);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<RelatorioDeDiversidade> atualizar(@PathVariable Long id, @RequestBody RelatorioDeDiversidade relatorio) {
-        return relatorioService.buscarPorId(id)
-                .map(r -> {
-                    relatorio.setId(id);
-                    return ResponseEntity.ok(relatorioService.salvar(relatorio));
-                })
+    public ResponseEntity<RelatorioDeDiversidadeResponseDTO> atualizar(@PathVariable Long id, @Valid @RequestBody RelatorioDeDiversidadeRequestDTO dto) {
+        return relatorioService.atualizar(id, dto)
+                .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
@@ -50,4 +54,3 @@ public class RelatorioDeDiversidadeController {
         return ResponseEntity.noContent().build();
     }
 }
-

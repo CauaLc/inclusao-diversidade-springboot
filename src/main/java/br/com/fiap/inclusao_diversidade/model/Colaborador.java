@@ -30,7 +30,6 @@ public class Colaborador implements UserDetails {
     private Long id;
 
     @Column(name = "nome_colaborador")
-    @NotEmpty(message = "O nome do contato é obrigatório")
     private String nomeColaborador;
 
     @Column(name = "genero_colaborador")
