@@ -1,7 +1,7 @@
 package br.com.fiap.inclusao_diversidade.controller;
 
-import br.com.fiap.inclusao_diversidade.dto.TreinamentoRequestDTO;
-import br.com.fiap.inclusao_diversidade.dto.TreinamentoResponseDTO;
+import br.com.fiap.inclusao_diversidade.DTO.TreinamentoRequestDTO;
+import br.com.fiap.inclusao_diversidade.DTO.TreinamentoResponseDTO;
 import br.com.fiap.inclusao_diversidade.service.TreinamentoService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;

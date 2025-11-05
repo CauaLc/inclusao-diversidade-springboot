@@ -1,11 +1,10 @@
 package br.com.fiap.inclusao_diversidade.service;
 
-import br.com.fiap.inclusao_diversidade.dto.ColaboradorRequestDTO;
-import br.com.fiap.inclusao_diversidade.dto.ColaboradorResponseDTO;
+import br.com.fiap.inclusao_diversidade.DTO.ColaboradorRequestDTO;
+import br.com.fiap.inclusao_diversidade.DTO.ColaboradorResponseDTO;
 import br.com.fiap.inclusao_diversidade.model.Colaborador;
 import br.com.fiap.inclusao_diversidade.repository.ColaboradorRepository;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -65,24 +64,23 @@ public class ColaboradorService {
         }
     }
 
-    public Colaborador salvarUsuario(Colaborador colaborador){
+
+    public ColaboradorResponseDTO salvarUsuario(ColaboradorRequestDTO colaboradorDTO){
 
         String senhaCriptografada = new
-                BCryptPasswordEncoder().encode(colaborador.getPassword());
+                BCryptPasswordEncoder().encode(colaboradorDTO.senha());
 
-        Colaborador usuario = new Colaborador();
-        BeanUtils.copyProperties(colaborador, usuario);
-        usuario.setSenha(senhaCriptografada);
+        Colaborador colaborador = new Colaborador();
+        BeanUtils.copyProperties(colaboradorDTO, colaborador);
+        colaborador.setSenha(senhaCriptografada);
 
-        Colaborador usuarioSalvo = colaboradorRepository.save(usuario);
+        Colaborador usuarioSalvo = colaboradorRepository.save(colaborador);
 
-        return  usuarioSalvo;
+        return new ColaboradorResponseDTO(usuarioSalvo);
 
     }
 
-}
-
-    // Método utilitário para mapear DTO para Entidade
+    //Metodo utilitário para mapear DTO para Entidade
     private void mapDtoToEntity(ColaboradorRequestDTO dto, Colaborador entity) {
         entity.setNomeColaborador(dto.nomeColaborador());
         entity.setGeneroColaborador(dto.generoColaborador());

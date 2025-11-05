@@ -1,7 +1,7 @@
 package br.com.fiap.inclusao_diversidade.service;
 
-import br.com.fiap.inclusao_diversidade.dto.ParticipacaoEmTreinamentoRequestDTO;
-import br.com.fiap.inclusao_diversidade.dto.ParticipacaoEmTreinamentoResponseDTO;
+import br.com.fiap.inclusao_diversidade.DTO.ParticipacaoEmTreinamentoRequestDTO;
+import br.com.fiap.inclusao_diversidade.DTO.ParticipacaoEmTreinamentoResponseDTO;
 import br.com.fiap.inclusao_diversidade.model.Colaborador;
 import br.com.fiap.inclusao_diversidade.model.ParticipacaoEmTreinamento;
 import br.com.fiap.inclusao_diversidade.model.Treinamento;

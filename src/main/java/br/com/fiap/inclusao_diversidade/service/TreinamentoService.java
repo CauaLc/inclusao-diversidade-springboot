@@ -1,7 +1,7 @@
 package br.com.fiap.inclusao_diversidade.service;
 
-import br.com.fiap.inclusao_diversidade.dto.TreinamentoRequestDTO;
-import br.com.fiap.inclusao_diversidade.dto.TreinamentoResponseDTO;
+import br.com.fiap.inclusao_diversidade.DTO.TreinamentoRequestDTO;
+import br.com.fiap.inclusao_diversidade.DTO.TreinamentoResponseDTO;
 import br.com.fiap.inclusao_diversidade.model.Treinamento;
 import br.com.fiap.inclusao_diversidade.repository.TreinamentoRepository;
 import org.springframework.beans.factory.annotation.Autowired;

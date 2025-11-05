@@ -1,8 +1,8 @@
-package br.com.fiap.inclusao_diversidade.dto;
+package br.com.fiap.inclusao_diversidade.DTO;
 
 import br.com.fiap.inclusao_diversidade.model.Colaborador;
+import br.com.fiap.inclusao_diversidade.model.ColaboradoresRole;
 
-// DTO para exibir um Colaborador
 public record ColaboradorResponseDTO(
         Long id,
         String nomeColaborador,
@@ -10,9 +10,10 @@ public record ColaboradorResponseDTO(
         String etniaColaborador,
         Boolean temDisabilidade,
         String departamento,
+        String email,
+        ColaboradoresRole role,
         Boolean treinamentoCompleto
 ) {
-    // Construtor que converte a Entidade Colaborador para este DTO
     public ColaboradorResponseDTO(Colaborador entity) {
         this(
                 entity.getId(),
@@ -21,6 +22,8 @@ public record ColaboradorResponseDTO(
                 entity.getEtniaColaborador(),
                 entity.getTemDisabilidade(),
                 entity.getDepartamento(),
+                entity.getEmail(),
+                entity.getRole(),
                 entity.getTreinamentoCompleto()
         );
     }

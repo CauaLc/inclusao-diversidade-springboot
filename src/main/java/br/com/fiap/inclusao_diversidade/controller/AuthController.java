@@ -1,5 +1,7 @@
 package br.com.fiap.inclusao_diversidade.controller;
 
+import br.com.fiap.inclusao_diversidade.DTO.ColaboradorRequestDTO;
+import br.com.fiap.inclusao_diversidade.DTO.ColaboradorResponseDTO;
 import br.com.fiap.inclusao_diversidade.DTO.LoginDTO;
 import br.com.fiap.inclusao_diversidade.DTO.TokenDTO;
 import br.com.fiap.inclusao_diversidade.model.Colaborador;
@@ -31,7 +33,7 @@ public class AuthController {
             @RequestBody
             @Valid
             LoginDTO usuarioDto
-    ){
+    ) {
         UsernamePasswordAuthenticationToken usernamePassword =
                 new UsernamePasswordAuthenticationToken(
                         usuarioDto.email(),
@@ -46,12 +48,13 @@ public class AuthController {
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity registrar(@RequestBody  Colaborador colaborador){
+    public ResponseEntity registrar(@RequestBody @Valid ColaboradorRequestDTO colaboradorRequestDTO){
 
-        Colaborador usuarioSalvo = null;
-        usuarioSalvo = colaboradorService.salvarUsuario(colaborador);
+        ColaboradorResponseDTO usuarioSalvo = null;
+        usuarioSalvo = colaboradorService.salvarUsuario(colaboradorRequestDTO);
 
         return ResponseEntity.ok(usuarioSalvo);
 
     }
+
 }

@@ -1,4 +1,4 @@
-package br.com.fiap.inclusao_diversidade.dto;
+package br.com.fiap.inclusao_diversidade.DTO;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;

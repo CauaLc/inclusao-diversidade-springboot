@@ -1,7 +1,7 @@
 package br.com.fiap.inclusao_diversidade.service;
 
-import br.com.fiap.inclusao_diversidade.dto.RelatorioDeDiversidadeRequestDTO;
-import br.com.fiap.inclusao_diversidade.dto.RelatorioDeDiversidadeResponseDTO;
+import br.com.fiap.inclusao_diversidade.DTO.RelatorioDeDiversidadeRequestDTO;
+import br.com.fiap.inclusao_diversidade.DTO.RelatorioDeDiversidadeResponseDTO;
 import br.com.fiap.inclusao_diversidade.model.RelatorioDeDiversidade;
 import br.com.fiap.inclusao_diversidade.repository.RelatorioDeDiversidadeRepository;
 import org.springframework.stereotype.Service;
