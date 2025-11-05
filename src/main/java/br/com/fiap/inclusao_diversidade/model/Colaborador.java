@@ -2,7 +2,7 @@ package br.com.fiap.inclusao_diversidade.model;
 
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
+// import jakarta.validation.constraints.NotEmpty;
 
 @Entity
 @Table(name = "tbl_colaboradores")
@@ -23,7 +23,6 @@ public class Colaborador {
     private Long id;
 
     @Column(name = "nome_colaborador")
-    @NotEmpty(message = "O nome do contato é obrigatório")
     private String nomeColaborador;
 
     @Column(name = "genero_colaborador")
@@ -39,6 +38,8 @@ public class Colaborador {
 
     @Column (name = "treinamento_completo")
     private Boolean treinamentoCompleto = false;
+
+    // --- Getters e Setters ---
 
     public Long getId() {
         return id;

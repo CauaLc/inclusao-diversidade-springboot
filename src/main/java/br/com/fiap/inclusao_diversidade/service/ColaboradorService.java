@@ -1,12 +1,15 @@
 package br.com.fiap.inclusao_diversidade.service;
 
+import br.com.fiap.inclusao_diversidade.dto.ColaboradorRequestDTO;
+import br.com.fiap.inclusao_diversidade.dto.ColaboradorResponseDTO;
 import br.com.fiap.inclusao_diversidade.model.Colaborador;
 import br.com.fiap.inclusao_diversidade.repository.ColaboradorRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ColaboradorService {
@@ -17,20 +20,55 @@ public class ColaboradorService {
         this.colaboradorRepository = colaboradorRepository;
     }
 
-    public List<Colaborador> listarTodos() {
-        return colaboradorRepository.findAll();
+    @Transactional(readOnly = true)
+    public List<ColaboradorResponseDTO> listarTodos() {
+        return colaboradorRepository.findAll()
+                .stream()
+                .map(ColaboradorResponseDTO::new)
+                .collect(Collectors.toList());
     }
 
-    public Optional<Colaborador> buscarPorId(Long id) {
-        return colaboradorRepository.findById(id);
+    @Transactional(readOnly = true)
+    public Optional<ColaboradorResponseDTO> buscarPorId(Long id) {
+        return colaboradorRepository.findById(id)
+                .map(ColaboradorResponseDTO::new);
     }
 
-    public Colaborador salvar(Colaborador colaborador) {
-        return colaboradorRepository.save(colaborador);
+    @Transactional
+    public ColaboradorResponseDTO salvar(ColaboradorRequestDTO dto) {
+        Colaborador entity = new Colaborador();
+        mapDtoToEntity(dto, entity);
+        Colaborador salvo = colaboradorRepository.save(entity);
+        return new ColaboradorResponseDTO(salvo);
+    }
+
+    @Transactional
+    public Optional<ColaboradorResponseDTO> atualizar(Long id, ColaboradorRequestDTO dto) {
+        return colaboradorRepository.findById(id)
+                .map(entityExistente -> {
+                    mapDtoToEntity(dto, entityExistente);
+                    Colaborador atualizado = colaboradorRepository.save(entityExistente);
+                    return new ColaboradorResponseDTO(atualizado);
+                });
     }
 
     public void deletar(Long id) {
-        colaboradorRepository.deleteById(id);
+        // Adicionando verificacao de existencia para evitar erros
+        if (colaboradorRepository.existsById(id)) {
+            colaboradorRepository.deleteById(id);
+        } else {
+            // Lancar uma exceção ou tratar caso não encontre
+            throw new RuntimeException("Colaborador não encontrado para o id :: " + id); // Exemplo
+        }
+    }
+
+    // Método utilitário para mapear DTO para Entidade
+    private void mapDtoToEntity(ColaboradorRequestDTO dto, Colaborador entity) {
+        entity.setNomeColaborador(dto.nomeColaborador());
+        entity.setGeneroColaborador(dto.generoColaborador());
+        entity.setEtniaColaborador(dto.etniaColaborador());
+        entity.setTemDisabilidade(dto.temDisabilidade());
+        entity.setDepartamento(dto.departamento());
+        entity.setTreinamentoCompleto(dto.treinamentoCompleto());
     }
 }
-

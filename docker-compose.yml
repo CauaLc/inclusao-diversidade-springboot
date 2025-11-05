@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  # 1. Serviço: Sua Aplicação Spring Boot
+  app:
+    # Constrói a imagem usando o Dockerfile no diretório atual
+    build: .
+    # Dá um nome amigável ao contêiner
+    container_name: inclusao-diversidade-app
+    # Mapeia a porta 8080 do seu PC para a porta 8080 do contêiner
+    ports:
+      - "8080:8080"
+
+    # Define as variáveis de ambiente para a aplicação
+    # O Spring Boot usa estas variáveis com prioridade sobre o application.properties
+    environment:
+      - SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL}
+      - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
+      - SPRING_FLYWAY_ENABLED=true
+      - SPRING_JPA_SHOW_SQL=true
+      - SPRING_JPA_PROPERTIES_HIBERNATE_FORMAT_SQL=true
+      - SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT=org.hibernate.dialect.OracleDialect
+
+    # Arquivo .env que armazena as credenciais
+    env_file:
+      - .env
+
+    # Define uma rede para o serviço
+    networks:
+      - inclusao-net
+
+# Configuração da rede
+networks:
+  inclusao-net:
+    driver: bridge
