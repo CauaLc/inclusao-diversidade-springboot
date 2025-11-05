@@ -4,6 +4,9 @@ import br.com.fiap.inclusao_diversidade.dto.ColaboradorRequestDTO;
 import br.com.fiap.inclusao_diversidade.dto.ColaboradorResponseDTO;
 import br.com.fiap.inclusao_diversidade.model.Colaborador;
 import br.com.fiap.inclusao_diversidade.repository.ColaboradorRepository;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -61,6 +64,23 @@ public class ColaboradorService {
             throw new RuntimeException("Colaborador não encontrado para o id :: " + id); // Exemplo
         }
     }
+
+    public Colaborador salvarUsuario(Colaborador colaborador){
+
+        String senhaCriptografada = new
+                BCryptPasswordEncoder().encode(colaborador.getPassword());
+
+        Colaborador usuario = new Colaborador();
+        BeanUtils.copyProperties(colaborador, usuario);
+        usuario.setSenha(senhaCriptografada);
+
+        Colaborador usuarioSalvo = colaboradorRepository.save(usuario);
+
+        return  usuarioSalvo;
+
+    }
+
+}
 
     // Método utilitário para mapear DTO para Entidade
     private void mapDtoToEntity(ColaboradorRequestDTO dto, Colaborador entity) {

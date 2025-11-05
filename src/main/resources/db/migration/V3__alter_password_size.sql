@@ -1,0 +1,2 @@
+ALTER TABLE tbl_colaboradores
+    MODIFY SENHA VARCHAR2(100);
