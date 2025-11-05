@@ -2,11 +2,18 @@ package br.com.fiap.inclusao_diversidade.model;
 
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Table(name = "tbl_colaboradores")
-public class Colaborador {
+public class Colaborador implements UserDetails {
 
     @Id
     @GeneratedValue(
@@ -37,8 +44,40 @@ public class Colaborador {
 
     private String departamento;
 
+    private String email;
+
+    @NotEmpty(message = "Uma senha deve ser cadastrada!")
+    private String senha;
+
+    @Enumerated(EnumType.STRING)
+    private ColaboradoresRole role;
+
     @Column (name = "treinamento_completo")
     private Boolean treinamentoCompleto = false;
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public ColaboradoresRole getRole() {
+        return role;
+    }
+
+    public void setRole(ColaboradoresRole role) {
+        this.role = role;
+    }
+
+    public String getSenha() {
+        return senha;
+    }
+
+    public void setSenha(String senha) {
+        this.senha = senha;
+    }
 
     public Long getId() {
         return id;
@@ -94,5 +133,47 @@ public class Colaborador {
 
     public void setTreinamentoCompleto(Boolean treinamentoCompleto) {
         this.treinamentoCompleto = treinamentoCompleto;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        if (this.role == ColaboradoresRole.ADMIN) {
+            return List.of(
+                    new SimpleGrantedAuthority("ROLE_ADMIN"),
+                    new SimpleGrantedAuthority("ROLE_USER")
+            );
+        } else {
+            return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+        }
+    }
+
+    @Override
+    public String getPassword() {
+        return this.senha;
+    }
+
+    @Override
+    public String getUsername() {
+        return this.email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }
