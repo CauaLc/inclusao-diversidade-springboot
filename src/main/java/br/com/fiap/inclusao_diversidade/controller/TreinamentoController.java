@@ -1,11 +1,14 @@
 package br.com.fiap.inclusao_diversidade.controller;
 
-import br.com.fiap.inclusao_diversidade.model.Treinamento;
+import br.com.fiap.inclusao_diversidade.DTO.TreinamentoRequestDTO;
+import br.com.fiap.inclusao_diversidade.DTO.TreinamentoResponseDTO;
 import br.com.fiap.inclusao_diversidade.service.TreinamentoService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -19,29 +22,29 @@ public class TreinamentoController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Treinamento>> listarTodos() {
+    public ResponseEntity<List<TreinamentoResponseDTO>> listarTodos() {
         return ResponseEntity.ok(treinamentoService.listarTodos());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Treinamento> buscarPorId(@PathVariable Long id) {
+    public ResponseEntity<TreinamentoResponseDTO> buscarPorId(@PathVariable Long id) {
         return treinamentoService.buscarPorId(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public ResponseEntity<Treinamento> criar(@Valid @RequestBody Treinamento treinamento) {
-        return ResponseEntity.ok(treinamentoService.salvar(treinamento));
+    public ResponseEntity<TreinamentoResponseDTO> criar(@Valid @RequestBody TreinamentoRequestDTO dto) {
+        TreinamentoResponseDTO salvo = treinamentoService.salvar(dto);
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+                .buildAndExpand(salvo.id()).toUri();
+        return ResponseEntity.created(location).body(salvo);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Treinamento> atualizar(@PathVariable Long id,@Valid @RequestBody Treinamento treinamento) {
-        return treinamentoService.buscarPorId(id)
-                .map(t -> {
-                    treinamento.setId(id);
-                    return ResponseEntity.ok(treinamentoService.salvar(treinamento));
-                })
+    public ResponseEntity<TreinamentoResponseDTO> atualizar(@PathVariable Long id, @Valid @RequestBody TreinamentoRequestDTO dto) {
+        return treinamentoService.atualizar(id, dto)
+                .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 

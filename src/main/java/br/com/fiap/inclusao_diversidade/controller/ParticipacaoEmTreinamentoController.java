@@ -1,10 +1,14 @@
 package br.com.fiap.inclusao_diversidade.controller;
 
-import br.com.fiap.inclusao_diversidade.model.ParticipacaoEmTreinamento;
+import br.com.fiap.inclusao_diversidade.DTO.ParticipacaoEmTreinamentoRequestDTO;
+import br.com.fiap.inclusao_diversidade.DTO.ParticipacaoEmTreinamentoResponseDTO;
 import br.com.fiap.inclusao_diversidade.service.ParticipacaoEmTreinamentoService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -18,29 +22,29 @@ public class ParticipacaoEmTreinamentoController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ParticipacaoEmTreinamento>> listarTodos() {
+    public ResponseEntity<List<ParticipacaoEmTreinamentoResponseDTO>> listarTodos() {
         return ResponseEntity.ok(participacaoService.listarTodos());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ParticipacaoEmTreinamento> buscarPorId(@PathVariable Long id) {
+    public ResponseEntity<ParticipacaoEmTreinamentoResponseDTO> buscarPorId(@PathVariable Long id) {
         return participacaoService.buscarPorId(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public ResponseEntity<ParticipacaoEmTreinamento> criar(@RequestBody ParticipacaoEmTreinamento participacao) {
-        return ResponseEntity.ok(participacaoService.salvar(participacao));
+    public ResponseEntity<ParticipacaoEmTreinamentoResponseDTO> criar(@Valid @RequestBody ParticipacaoEmTreinamentoRequestDTO dto) {
+        ParticipacaoEmTreinamentoResponseDTO salvo = participacaoService.salvar(dto);
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+                .buildAndExpand(salvo.id()).toUri();
+        return ResponseEntity.created(location).body(salvo);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ParticipacaoEmTreinamento> atualizar(@PathVariable Long id, @RequestBody ParticipacaoEmTreinamento participacao) {
-        return participacaoService.buscarPorId(id)
-                .map(p -> {
-                    participacao.setId(id);
-                    return ResponseEntity.ok(participacaoService.salvar(participacao));
-                })
+    public ResponseEntity<ParticipacaoEmTreinamentoResponseDTO> atualizar(@PathVariable Long id, @Valid @RequestBody ParticipacaoEmTreinamentoRequestDTO dto) {
+        return participacaoService.atualizar(id, dto)
+                .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
@@ -50,4 +54,3 @@ public class ParticipacaoEmTreinamentoController {
         return ResponseEntity.noContent().build();
     }
 }
-
