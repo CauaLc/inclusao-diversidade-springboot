@@ -2,6 +2,7 @@ package br.com.fiap.inclusao_diversidade.controller;
 
 import br.com.fiap.inclusao_diversidade.DTO.ColaboradorRequestDTO;
 import br.com.fiap.inclusao_diversidade.DTO.ColaboradorResponseDTO;
+import br.com.fiap.inclusao_diversidade.exception.ResourceNotFoundException;
 import br.com.fiap.inclusao_diversidade.service.ColaboradorService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +31,7 @@ public class ColaboradorController {
     public ResponseEntity<ColaboradorResponseDTO> buscarPorId(@PathVariable Long id) {
         return colaboradorService.buscarPorId(id)
                 .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .orElseThrow(() -> new ResourceNotFoundException("Colaborador", id));
     }
 
     @PostMapping
@@ -42,10 +43,12 @@ public class ColaboradorController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ColaboradorResponseDTO> atualizar(@PathVariable Long id, @Valid @RequestBody ColaboradorRequestDTO dto) {
+    public ResponseEntity<ColaboradorResponseDTO> atualizar(
+            @PathVariable Long id,
+            @Valid @RequestBody ColaboradorRequestDTO dto) {
         return colaboradorService.atualizar(id, dto)
                 .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .orElseThrow(() -> new ResourceNotFoundException("Colaborador", id));
     }
 
     @DeleteMapping("/{id}")

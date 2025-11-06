@@ -2,6 +2,7 @@ package br.com.fiap.inclusao_diversidade.controller;
 
 import br.com.fiap.inclusao_diversidade.DTO.TreinamentoRequestDTO;
 import br.com.fiap.inclusao_diversidade.DTO.TreinamentoResponseDTO;
+import br.com.fiap.inclusao_diversidade.exception.ResourceNotFoundException;
 import br.com.fiap.inclusao_diversidade.service.TreinamentoService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +31,7 @@ public class TreinamentoController {
     public ResponseEntity<TreinamentoResponseDTO> buscarPorId(@PathVariable Long id) {
         return treinamentoService.buscarPorId(id)
                 .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .orElseThrow(() -> new ResourceNotFoundException("Treinamento", id));
     }
 
     @PostMapping
@@ -42,10 +43,12 @@ public class TreinamentoController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<TreinamentoResponseDTO> atualizar(@PathVariable Long id, @Valid @RequestBody TreinamentoRequestDTO dto) {
+    public ResponseEntity<TreinamentoResponseDTO> atualizar(
+            @PathVariable Long id,
+            @Valid @RequestBody TreinamentoRequestDTO dto) {
         return treinamentoService.atualizar(id, dto)
                 .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .orElseThrow(() -> new ResourceNotFoundException("Treinamento", id));
     }
 
     @DeleteMapping("/{id}")

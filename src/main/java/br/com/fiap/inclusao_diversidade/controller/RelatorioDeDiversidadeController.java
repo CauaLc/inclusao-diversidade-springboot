@@ -2,6 +2,7 @@ package br.com.fiap.inclusao_diversidade.controller;
 
 import br.com.fiap.inclusao_diversidade.DTO.RelatorioDeDiversidadeRequestDTO;
 import br.com.fiap.inclusao_diversidade.DTO.RelatorioDeDiversidadeResponseDTO;
+import br.com.fiap.inclusao_diversidade.exception.ResourceNotFoundException;
 import br.com.fiap.inclusao_diversidade.service.RelatorioDeDiversidadeService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +31,7 @@ public class RelatorioDeDiversidadeController {
     public ResponseEntity<RelatorioDeDiversidadeResponseDTO> buscarPorId(@PathVariable Long id) {
         return relatorioService.buscarPorId(id)
                 .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .orElseThrow(() -> new ResourceNotFoundException("Relatório de Diversidade", id));
     }
 
     @PostMapping
@@ -42,10 +43,12 @@ public class RelatorioDeDiversidadeController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<RelatorioDeDiversidadeResponseDTO> atualizar(@PathVariable Long id, @Valid @RequestBody RelatorioDeDiversidadeRequestDTO dto) {
+    public ResponseEntity<RelatorioDeDiversidadeResponseDTO> atualizar(
+            @PathVariable Long id,
+            @Valid @RequestBody RelatorioDeDiversidadeRequestDTO dto) {
         return relatorioService.atualizar(id, dto)
                 .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .orElseThrow(() -> new ResourceNotFoundException("Relatório de Diversidade", id));
     }
 
     @DeleteMapping("/{id}")
