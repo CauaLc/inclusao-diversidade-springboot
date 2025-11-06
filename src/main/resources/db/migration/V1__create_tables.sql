@@ -1,4 +1,5 @@
 
+
 -- MIGRATION V1 - Criação das tabelas iniciais
 
 -- ====== SEQUENCES ======
