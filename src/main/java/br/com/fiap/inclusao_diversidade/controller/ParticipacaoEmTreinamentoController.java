@@ -2,6 +2,7 @@ package br.com.fiap.inclusao_diversidade.controller;
 
 import br.com.fiap.inclusao_diversidade.DTO.ParticipacaoEmTreinamentoRequestDTO;
 import br.com.fiap.inclusao_diversidade.DTO.ParticipacaoEmTreinamentoResponseDTO;
+import br.com.fiap.inclusao_diversidade.exception.ResourceNotFoundException;
 import br.com.fiap.inclusao_diversidade.service.ParticipacaoEmTreinamentoService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +31,7 @@ public class ParticipacaoEmTreinamentoController {
     public ResponseEntity<ParticipacaoEmTreinamentoResponseDTO> buscarPorId(@PathVariable Long id) {
         return participacaoService.buscarPorId(id)
                 .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .orElseThrow(() -> new ResourceNotFoundException("Participação em Treinamento", id));
     }
 
     @PostMapping
@@ -42,10 +43,12 @@ public class ParticipacaoEmTreinamentoController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ParticipacaoEmTreinamentoResponseDTO> atualizar(@PathVariable Long id, @Valid @RequestBody ParticipacaoEmTreinamentoRequestDTO dto) {
+    public ResponseEntity<ParticipacaoEmTreinamentoResponseDTO> atualizar(
+            @PathVariable Long id,
+            @Valid @RequestBody ParticipacaoEmTreinamentoRequestDTO dto) {
         return participacaoService.atualizar(id, dto)
                 .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .orElseThrow(() -> new ResourceNotFoundException("Participação em Treinamento", id));
     }
 
     @DeleteMapping("/{id}")
