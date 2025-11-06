@@ -32,9 +32,12 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/colaboradores").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/participacoes").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.POST, "/api/treinamentos").hasRole("USER")
-                        .anyRequest().permitAll()
+                        .requestMatchers(HttpMethod.PUT, "/api/colaboradores/").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers(HttpMethod.GET, "/api/treinamentos/").hasAnyRole("ADMIN", "USER") //{id}
+                        .requestMatchers(HttpMethod.GET, "/api/treinamentos").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers(HttpMethod.GET, "/api/colaboradores").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers(HttpMethod.GET, "/api/colaboradores/").hasAnyRole("ADMIN", "USER")
+                        .anyRequest().hasRole("ADMIN")
                 )
                 .addFilterBefore(
                         verificarToken,
